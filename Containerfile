@@ -2,9 +2,17 @@ FROM registry.access.redhat.com/ubi8/openjdk-11:latest
 
 ADD main.java /tmp/main.java
 
-#ADD jce_policy-8.zip /tmp/jce_policy-8.zip
-#USER root
-#RUN unzip -o -j -q /tmp/jce_policy-8.zip -d ${JAVA_HOME}/lib/security/
-#USER 18cd 5
+# Check the current configuration
+RUN java /tmp/main.java;
+
+
+# Enable TLS_ECDH_* ciphers
+user root
+RUN sed -i 's/ ECDH,//' /etc/crypto-policies/back-ends/java.config
+user 184
+
+# Check the current configuration
+RUN java /tmp/main.java;
+
 
 CMD ["java","/tmp/main.java"]

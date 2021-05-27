@@ -1,7 +1,23 @@
 # java-cipher-example
 
+How to enable TLS_ECDH_* ciphers:
+
 ```
-$ podman run -ti --rm $(podman build -q -t java-cipher-example .)
+sed -i 's/ ECDH,//' /etc/crypto-policies/back-ends/java.config
+```
+
+```
+$ podman build --no-cache  .
+STEP 1: FROM registry.access.redhat.com/ubi8/openjdk-11:latest
+STEP 2: ADD main.java /tmp/main.java
+--> aeb9a63edce
+STEP 3: RUN java /tmp/main.java;
+Check for unlimited crypto policies
+Java version: 11.0.11+9-LTS
+restricted cryptography: false Notice: 'false' means unlimited policies
+Security properties: (crypto.policy) unlimited
+Security properties (jdk.tls.disabledAlgorithms): DH keySize < 2048, SSLv2, SSLv3, TLSv1, TLSv1.1, DHE_DSS, RSA_EXPORT, DHE_DSS_EXPORT, DHE_RSA_EXPORT, DH_DSS_EXPORT, DH_RSA_EXPORT, DH_anon, ECDH_anon, DH_RSA, DH_DSS, ECDH, 3DES_EDE_CBC, DES_CBC, RC4_40, RC4_128, DES40_CBC, RC2, HmacMD5
+Max AES key length = 2147483647
 Default Cipher
         SSL_RSA_WITH_NULL_SHA
    *    TLS_AES_128_GCM_SHA256
@@ -34,4 +50,69 @@ Default Cipher
    *    TLS_RSA_WITH_AES_256_CBC_SHA256
    *    TLS_RSA_WITH_AES_256_GCM_SHA384
         TLS_RSA_WITH_NULL_SHA256
+--> 3dd01d93aef
+STEP 4: user root
+--> 746cfe76597
+STEP 5: RUN sed -i 's/ ECDH,//' /etc/crypto-policies/back-ends/java.config
+--> 82e77a0668b
+STEP 6: user 184
+--> 8aefa1e83cb
+STEP 7: RUN java /tmp/main.java;
+Check for unlimited crypto policies
+Java version: 11.0.11+9-LTS
+restricted cryptography: false Notice: 'false' means unlimited policies
+Security properties: (crypto.policy) unlimited
+Security properties (jdk.tls.disabledAlgorithms): DH keySize < 2048, SSLv2, SSLv3, TLSv1, TLSv1.1, DHE_DSS, RSA_EXPORT, DHE_DSS_EXPORT, DHE_RSA_EXPORT, DH_DSS_EXPORT, DH_RSA_EXPORT, DH_anon, ECDH_anon, DH_RSA, DH_DSS, 3DES_EDE_CBC, DES_CBC, RC4_40, RC4_128, DES40_CBC, RC2, HmacMD5
+Max AES key length = 2147483647
+Default Cipher
+        SSL_RSA_WITH_NULL_SHA
+   *    TLS_AES_128_GCM_SHA256
+   *    TLS_AES_256_GCM_SHA384
+   *    TLS_DHE_RSA_WITH_AES_128_CBC_SHA
+   *    TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
+   *    TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+   *    TLS_DHE_RSA_WITH_AES_256_CBC_SHA
+   *    TLS_DHE_RSA_WITH_AES_256_CBC_SHA256
+   *    TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+   *    TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+   *    TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+   *    TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+   *    TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA
+   *    TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
+   *    TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        TLS_ECDHE_ECDSA_WITH_NULL_SHA
+   *    TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
+   *    TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+   *    TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+   *    TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+   *    TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384
+   *    TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        TLS_ECDHE_RSA_WITH_NULL_SHA
+   *    TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA
+   *    TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256
+   *    TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256
+   *    TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA
+   *    TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384
+   *    TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384
+        TLS_ECDH_ECDSA_WITH_NULL_SHA
+   *    TLS_ECDH_RSA_WITH_AES_128_CBC_SHA
+   *    TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256
+   *    TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256
+   *    TLS_ECDH_RSA_WITH_AES_256_CBC_SHA
+   *    TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384
+   *    TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384
+        TLS_ECDH_RSA_WITH_NULL_SHA
+   *    TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+   *    TLS_RSA_WITH_AES_128_CBC_SHA
+   *    TLS_RSA_WITH_AES_128_CBC_SHA256
+   *    TLS_RSA_WITH_AES_128_GCM_SHA256
+   *    TLS_RSA_WITH_AES_256_CBC_SHA
+   *    TLS_RSA_WITH_AES_256_CBC_SHA256
+   *    TLS_RSA_WITH_AES_256_GCM_SHA384
+        TLS_RSA_WITH_NULL_SHA256
+--> 3d86ef63b64
+STEP 8: CMD ["java","/tmp/main.java"]
+STEP 9: COMMIT
+--> 01ee15db7fb
+01ee15db7fb2054aedc83316f6eae9a5bb12c2a52b67d7c46bf4656b11e982f7
 ```
