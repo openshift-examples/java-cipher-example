@@ -20,6 +20,7 @@ public class Main {
         System.out.println("restricted cryptography: " + restrictedCryptography() + " Notice: 'false' means unlimited policies"); // false mean unlimited crypto
         System.out.println("Security properties: (crypto.policy) " + Security.getProperty("crypto.policy"));
         System.out.println("Security properties (jdk.tls.disabledAlgorithms): " + Security.getProperty("jdk.tls.disabledAlgorithms"));
+
         int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
         System.out.println("Max AES key length = " + maxKeyLen);
 
